@@ -283,11 +283,20 @@ function animate(gl) {
    let divs = Math.floor(5 + c * 40);
 
    M.save();
-      let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction, divs,
-         [stretch * Math.sin(3*time*rate),
-	  stretch * Math.sin(4*time*rate),
-	  stretch * Math.sin(5*time*rate)/2] );
-      drawMesh(implicitSurfaceMesh, 'cyan', true);
+      M.save();
+         M.translate(0,1,1);
+         M.scale(2.5);
+         drawMesh(cubeMesh, 'yellow', false);
+      M.restore();
+      M.save();
+         M.scale(0.2);
+         drawMesh(sphereMesh, 'red', false);
+      M.restore();
+      M.save();
+         M.translate(0,-1.2,0);
+         M.scale(1);
+         drawMesh(cubeMesh, 'blue', false);
+      M.restore();
    M.restore();
 }
 
@@ -301,10 +310,8 @@ let blob = (center, radius, x, y, z) => {
 
 let implicitFunction = (x,y,z,args) => {
    let a = blob( [args[0], 0, 0], 0.28, x,y,z );
-   let b = blob( [0, args[1], 0], 0.28, x,y,z );
-   let c = blob( [0, 0, args[2]], 0.28, x,y,z );
 
-   return a*a*a*a + b*b*b*b + c*c*c*c - 0.5;
+   return a*a*a*a - 0.5;
 }
 
 // HELPER FUNCTIONS FOR ANIMATION
