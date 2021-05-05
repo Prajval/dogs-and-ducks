@@ -175,35 +175,61 @@ let rayHitsSphere = (V, W, S) => {
 
 let lerp = (a,b,t) => a + t * (b - a); // LINEAR INTERPOLATION
 
-let N = 0; // GREATER N INCREASES "NERVOUSNESS" OF BIG OBJECT
-
 // TIMING TABLE FOR THE ANIMATION SEQUENCE
 
 let timing = [
-   [0, lerp(1,.5,N)],
-   [1.8, lerp(2.3,2.1,N)],
-   [lerp(2,2.5,N), 2.8],
-   [2.0, 3.2],
-   [3.4, 3.9],
-   [4.3, 5.0],
+   [0, 1],
 ];
 
 // EASE CURVE TO ACCELERATE FROM REST AND THEN DECELERATE TO REST
 
 let sCurve = t => (3 - 2 * t) * t * t;
 
+// EVALUATE THE TIMING OF ONE ANIMATION PARAMETER FOR THIS FRAME
+
+let evalTiming = n => {
+   let t0 = timing[n][0];
+   let t1 = timing[n][1];
+
+   if (animationTime < t0)
+      return 0;
+   if (animationTime > t1)
+      return 1;
+   return sCurve((animationTime - t0) / (t1 - t0));
+}
+
 // CONVERT BETWEEN SLIDER POSITION AND VALUE RANGE BETWEEN 0.0 AND 1.0
 
 let sliderToT = s => Math.max(0, 10 * (sw/2 + s));
 let tToSlider = t => Math.max(sr-sw, Math.min(sw-sr, t / 10 - sw/2));
 
-let animationTime = 0, animationRunning = false;
+let animationTime = 0, animationRunning = false, prevTime = 0, maxTime = 3;
 
 //----------- ANIMATE EACH FRAME
 
 function animate(gl) {
 
    let time = (Date.now() - startTime) / 1000;
+
+   if(animationRunning) {
+     animationTime += time - prevTime;
+     prevTime = time;
+     console.log(animationTime);
+     if(animationTime > maxTime) {
+       animationRunning = false;
+       animationTime = 0;
+       prevTime = 0;
+     }
+   } else {
+     prevTime = time;
+   }
+
+   // TIMING
+   // EVALUATE ALL ANIMATION TIMING PARAMETERS
+
+   let T = [];
+   for (let i = 0 ; i < timing.length ; i++)
+      T[i] = evalTiming(i);
 
    // SET ANIMATION TIME IN FRAGMENT SHADER
 
@@ -290,6 +316,7 @@ function animate(gl) {
       M.restore();
       M.save();
          M.scale(0.2);
+         M.translate(0,2*Math.sin(Math.PI*T[0]),0);
          drawMesh(sphereMesh, 'red', false);
       M.restore();
       M.save();
@@ -398,7 +425,7 @@ canvas1.onMove = (x,y) => {
 // RECORD WHETHER ANY KEY IS PRESSED
 
 let isKeyPressed = false;
-canvas1.onKeyPress   = k => isKeyPressed = true;
+canvas1.onKeyPress   = k => {isKeyPressed = true; animationRunning = true;}
 canvas1.onKeyRelease = k => isKeyPressed = false;
 
 // START EVERYTHING
