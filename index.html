@@ -93,7 +93,7 @@ a sequence.
 
 
 <!!-------- GENERAL SUPPORT CODE -------->
-   
+
 <script>
 
 // CREATE THE HTML DOCUMENT
@@ -181,7 +181,7 @@ let N = 0; // GREATER N INCREASES "NERVOUSNESS" OF BIG OBJECT
 
 let timing = [
    [0, lerp(1,.5,N)],
-   [1.8, lerp(2.3,2.1,N)], 
+   [1.8, lerp(2.3,2.1,N)],
    [lerp(2,2.5,N), 2.8],
    [2.0, 3.2],
    [3.4, 3.9],
@@ -283,11 +283,11 @@ function animate(gl) {
    let divs = Math.floor(5 + c * 40);
 
    M.save();
-      let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction, divs,
-         [stretch * Math.sin(3*time*rate),
-	  stretch * Math.sin(4*time*rate),
-	  stretch * Math.sin(5*time*rate)/2] );
-      drawMesh(implicitSurfaceMesh, 'cyan', true);
+    //   let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction, divs,
+    //      [stretch * Math.sin(3*time*rate),
+	  // stretch * Math.sin(4*time*rate),
+	  // stretch * Math.sin(5*time*rate)/2] );
+    //   drawMesh(implicitSurfaceMesh, 'cyan', true);
    M.restore();
 }
 
@@ -398,5 +398,3 @@ canvas1.onKeyRelease = k => isKeyPressed = false;
 
 gl_start(canvas1, vs, fs);
 </script>
-
-
