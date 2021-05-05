@@ -6,7 +6,7 @@
 
 <body bgcolor=black text=white link=white alink=white vlink=white>
 <center>
-<canvas id='canvas1' width=600 height=600></canvas>
+<canvas id='canvas1' width=1200 height=1200></canvas>
 </center>
 </body>
 
@@ -79,7 +79,7 @@
 <!!-------- A PROPERLY DESCRIPTIVE TITLE -------->
 
 <script id='my_title' type='text/html'>
-IMPLICIT SURFACES
+FINAL PROJECT
 </script>
 
 
@@ -111,30 +111,30 @@ document.body.innerHTML = [''
    ,'<tr>'
    ,'<td valign=top><font size=2 color=red><div id=errorMarker>&nbsp;</div></font></td>'
    ,'<td valign=top>'
-   ,'<textArea id=textArea spellcheck=false '
-   ,'style="font:16px courier;outline-width:0;border-style:none;resize:none;overflow:scroll;"'
-   ,'></textArea>'
+   // ,'<textArea id=textArea spellcheck=false '
+   // ,'style="font:16px courier;outline-width:0;border-style:none;resize:none;overflow:scroll;"'
+   // ,'></textArea>'
    ,'</td><td valign=top>' + document.body.innerHTML + '</td>'
-   ,'<td valign=top><font size=5>' + my_instructions.innerHTML + '</td>'
+   ,'<td valign=top><font size=5>' //+ my_instructions.innerHTML + '</td>'
    ,'</tr></table>'
    ,'</TR></TABLE>'
    ].join('');
 
 //----------- SET UP THE EDITABLE TEXT AREA ON THE LEFT SIDE.
 
-let text = fs.split('\n'), cols = 0;
-for (let i = 0 ; i < text.length ; i++)
-   cols = Math.max(cols, text[i].length);
-
-textArea.rows = text.length;
-textArea.cols = cols;
-textArea.value = fs;
-textArea.style.backgroundColor = '#202020';
-textArea.style.color = 'white';
-
-//----------- REPARSE THE SHADER PROGRAM AFTER EVERY KEYSTROKE.
-
-textArea.onkeyup = function() { canvas1.setShaders(vs, this.value); }
+// let text = fs.split('\n'), cols = 0;
+// for (let i = 0 ; i < text.length ; i++)
+//    cols = Math.max(cols, text[i].length);
+//
+// textArea.rows = text.length;
+// textArea.cols = cols;
+// textArea.value = fs;
+// textArea.style.backgroundColor = '#202020';
+// textArea.style.color = 'white';
+//
+// //----------- REPARSE THE SHADER PROGRAM AFTER EVERY KEYSTROKE.
+//
+// textArea.onkeyup = function() { canvas1.setShaders(vs, this.value); }
 
 let startTime = Date.now();
 
@@ -283,11 +283,11 @@ function animate(gl) {
    let divs = Math.floor(5 + c * 40);
 
    M.save();
-    //   let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction, divs,
-    //      [stretch * Math.sin(3*time*rate),
-	  // stretch * Math.sin(4*time*rate),
-	  // stretch * Math.sin(5*time*rate)/2] );
-    //   drawMesh(implicitSurfaceMesh, 'cyan', true);
+      let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction, divs,
+         [stretch * Math.sin(3*time*rate),
+	  stretch * Math.sin(4*time*rate),
+	  stretch * Math.sin(5*time*rate)/2] );
+      drawMesh(implicitSurfaceMesh, 'cyan', true);
    M.restore();
 }
 
