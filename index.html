@@ -320,10 +320,10 @@ function animate(gl) {
 
    if(gameOver) {
      M.save();
-        M.translate(0,-1.7,0);
-        M.scale(1.2);
-        M.rotateY(Math.PI/2);
-        //drawMesh(cylinderMesh, '', false);
+        M.translate(0,0,0);
+        M.scale(0.03,0.1,0.05);
+        M.rotateX(Math.PI/2);
+        drawMesh(cylinderMesh, 'white', false);
      M.restore();
      return ;
    }
