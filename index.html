@@ -164,6 +164,16 @@ let hz = [   0,  0.0,     0,  0.0,     0,  0.0,    0,  0.0,     0,  0.0 ];
 
 let fl = 3;
 
+// HIT TESTING OF 2 SPHERES
+let sphereHitsSphere = (S1, S2, r1, r2) => {
+   let d =  Math.pow(S1[0]-S2[0], 2)
+          + Math.pow(S1[1]-S2[2], 2)
+          + Math.pow(S1[2]-S2[2], 2);
+   d = Math.sqrt(d);
+   
+   return d <= (r1 + r2);
+}
+
 //----------- FIND OUT WHETHER A RAY HITS A SPHERE
 
 let rayHitsSphere = (V, W, S) => {
