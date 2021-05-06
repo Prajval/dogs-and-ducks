@@ -436,8 +436,13 @@ canvas1.onMove = (x,y) => {
 // RECORD WHETHER ANY KEY IS PRESSED
 
 let isKeyPressed = false;
-canvas1.onKeyPress   = k => {isKeyPressed = true; animationRunning = true;}
+canvas1.onKeyPress   = k => isKeyPressed = true;
 canvas1.onKeyRelease = k => isKeyPressed = false;
+
+// RECORD WHETHER MOUSE IS PRESSED
+let isMousePressed = false;
+canvas1.onPress   = (x,y) => {isMousePressed = true; animationRunning = true;}
+canvas1.onRelease = (x,y) => {isMousePressed = false; same = false;}
 
 // START EVERYTHING
 
