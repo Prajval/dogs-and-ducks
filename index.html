@@ -152,6 +152,8 @@ materials['red'    ] = { ambient: [.2,.0,.0], diffuse: [1,0,0], specular: [.9,.9
 materials['steel'  ] = { ambient: [.03,.03,.03], diffuse: [.03,.03,.03], specular: [1,1,1,15] };
 materials['white'  ] = { ambient: [.2,.2,.2], diffuse: [1,1,1], specular: [.9,.9,.9,10] };
 materials['yellow' ] = { ambient: [.2,.2,.0], diffuse: [1,1,0], specular: [.9,.9,.0,10] };
+materials['skin' ] = { ambient: [.1,.0859,0.0675], diffuse: [1,0.859,0.675], specular: [1,0.859,0.675] };
+materials['tongue' ] = { ambient: [.1,.0212,0.0608], diffuse: [1,0.212,0.608], specular: [1,0.212,0.608,0.675] };
 
 //----------- DEFINE THE HERMITE SPLINE CURVE DATA
 
@@ -168,15 +170,14 @@ let fl = 3;
 let gameOver = false;
 
 // HIT TESTING OF 2 SPHERES
-let sphereHitsSphere = (S1, S2, r1, r2) => {
+let sphereHitsSphere = (S1, S2, r1, r2, caseNumber) => {
    let d =  Math.pow(S1[0]-S2[0], 2)
           + Math.pow(S1[1]-S2[1], 2)
           + Math.pow(S1[2]-S2[2], 2);
    d = Math.sqrt(d);
 
-   console.log("here 3");
-   console.log([S1[0], S1[1], S1[2]]);
-   console.log("here 3");
+   if((d <= (r1 + r2)) == true)
+      console.log(caseNumber);
 
    if(!gameOver)
       gameOver = (d <= (r1 + r2));
@@ -332,9 +333,46 @@ function animate(gl) {
    let b = .5 + widgetValue[1] / .34;
    let c = .5 + widgetValue[2] / .34;
 
-   var ballS = [];
-   var ballRadius = 0.1;
+   var ballS1 = [];
+   var ballRadius1 = 0.1;
+   var ballS2 = [];
+   var ballRadius2 = 0.1;
+   var ballS3 = [];
+   var ballRadius3 = 0.1;
+   var ballS4 = [];
+   var ballRadius4 = 0.1;
+
    var numberOfObstacles = 2;
+
+   let rate = .25 + a;
+   let stretch = .2 + .3 * b;
+   let divs = Math.floor(5 + c * 40);
+
+   let implicitFunction = (x,y,z,args) => {
+      let a = blob( [0, 0, 0.25], 0.28, x,y,z );            // head
+
+      let b = blob( [0.24, 0.32, 0.25], 0.1, x,y,z );    // ear 1
+      //let b1 = blob( [0.24, 0.32, 0.25], 0.08, x,y,z );  // ear 1
+
+      let c = blob( [-0.24, 0.32, 0.25], 0.1, x,y,z );      // ear 2
+
+      let d = blob( [0, -0.1, 0.5], 0.1, x,y,z );    // cheek 1
+      //let e = blob( [-0.2, -0.12, 0.4], 0.1, x,y,z );   // cheek 2
+
+      //let f = cube([0.25, 0.25, 0], 0.4, x, y, z);
+      let f = blob( [0, -0.3, 0.08], 0.15, x,y,z );   // neck
+
+      let g1 = blob([0, -0.45, -0.25], 0.3, x, y, z);   //body
+      let h1 = blob([0, -0.45, -0.75], 0.3, x, y, z);     // body
+
+      let m = blob( [0, -0.2, -0.85], 0.1, x,y,z );    // tail
+      let n = blob( [0, 0, -0.85], 0.1, x,y,z );   // tail
+      let m1 = blob( [0, 0.2, -0.85], 0.1, x,y,z );    // tail
+
+      return a*a*a*a + b*b*b*b + c*c*c*c + d*d*d*d + f*f*f*f
+      + g1*g1*g1*g1 + h1*h1*h1*h1
+       + m*m*m*m + n*n*n*n + m1*m1*m1*m1 - 0.5;
+   }
 
    M.save();
       M.save();
@@ -343,12 +381,114 @@ function animate(gl) {
          drawMesh(cubeMesh, 'yellow', false);
       M.restore();
       M.save();
-         M.translate(0,0.4*Math.sin(Math.PI*T[0])-0.4,0);
-         M.scale(ballRadius);
-         M.rotateZ(-4*time);
-         let m = M.value();
-         ballS = [m[12], m[13], m[14]];
-         drawMesh(sphereMesh, 'red', true);
+        M.translate(0,0.4*Math.sin(Math.PI*T[0])-0.45,0);
+        M.scale(0.1);
+        M.rotateY(Math.PI/2);
+        M.translate(0,0.5,0.3);
+         let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction, divs,
+            [stretch * Math.sin(3*rate),
+       stretch * Math.sin(4*rate),
+       stretch * Math.sin(5*rate)/2] );
+         M.rotateX(Math.cos(10*time)/10);
+         drawMesh(implicitSurfaceMesh, 'skin', true);
+         M.save();
+           M.translate(-0.1,0.1,0.47);
+           M.scale(0.05);
+           drawMesh(sphereMesh, 'black', false);
+         M.restore();
+         M.save();
+           M.translate(0.1,0.1,0.47);
+           M.scale(0.05);
+           drawMesh(sphereMesh, 'black', false);
+         M.restore();
+         M.save();
+           M.translate(0,0,0.62);
+           M.scale(0.08,0.05,0.05);
+           drawMesh(sphereMesh, 'brass', false);
+         M.restore();
+
+         M.save();
+           M.translate(0,-0.3,0);
+           M.scale(0.2);
+           M.rotateX(3*Math.PI/4);
+           drawMesh(torusMesh, 'red', false);
+         M.restore();
+
+         M.save();
+           M.translate(0,-0.3,0.55);
+           M.scale(0.07,0.16,0.1);
+           M.rotateX(3*Math.PI/4);
+           drawMesh(diskMesh, 'tongue', false);
+         M.restore();
+
+         // FRONT LEGS
+         M.save();
+               M.translate(-0.1,-0.7,0);
+               M.rotateX(Math.PI/2 + Math.cos(10*time)/2);
+               M.save();
+                  M.scale(0.1,0.1,0.2);
+                  drawMesh(sphereMesh, 'white', false);
+               M.restore();
+               M.save();
+                  M.translate(0,0.1,0.2);
+                  M.scale(0.1,0.15,0.1);
+                  let m1 = M.value();
+                  ballS1 = [m1[12], m1[13], m1[14]];
+                  ballRadius1 = 0.01;
+                  drawMesh(sphereMesh, 'white', false);
+               M.restore();
+         M.restore();
+         M.save();
+               M.translate(0.1,-0.7,0);
+               M.rotateX(Math.PI/2 + Math.sin(10*time)/2);
+               M.save();
+                  M.scale(0.1,0.1,0.2);
+                  drawMesh(sphereMesh, 'white', false);
+               M.restore();
+               M.save();
+                  M.translate(0,0.1,0.2);
+                  M.scale(0.1,0.15,0.1);
+                  let m2 = M.value();
+                  ballS2 = [m2[12], m2[13], m2[14]];
+                  ballRadius2 = 0.01;
+                  drawMesh(sphereMesh, 'white', false);
+               M.restore();
+         M.restore();
+
+         // BACK LEGS
+         M.save();
+               M.translate(-0.2,-0.7,-0.8);
+               M.rotateX(Math.PI/2 + Math.cos(10*time));
+               M.save();
+                  M.scale(0.1,0.1,0.2);
+                  drawMesh(sphereMesh, 'white', false);
+               M.restore();
+               M.save();
+                  M.translate(0,0.1,0.2);
+                  M.scale(0.1,0.15,0.1);
+                  let m3 = M.value();
+                  ballS3 = [m3[12], m3[13], m3[14]];
+                  ballRadius3 = 0.01;
+                  drawMesh(sphereMesh, 'white', false);
+               M.restore();
+         M.restore();
+         M.save();
+               M.translate(0.2,-0.7,-0.8);
+               M.rotateX(Math.PI/2 + Math.sin(10*time));
+               M.save();
+                  M.scale(0.1,0.1,0.2);
+                  drawMesh(sphereMesh, 'white', false);
+               M.restore();
+               M.save();
+                  M.translate(0,0.1,0.2);
+                  M.scale(0.1,0.15,0.1);
+                  let m4 = M.value();
+                  ballS4 = [m4[12], m4[13], m4[14]];
+                  ballRadius4 = 0.01;
+                  drawMesh(sphereMesh, 'white', false);
+               M.restore();
+         M.restore();
+
       M.restore();
       for(let i=0;i<numberOfObstacles;i++) {
          M.save();
@@ -356,8 +496,11 @@ function animate(gl) {
             M.translate(3.2*(0.5 - ((time+(2*i))/4 - Math.floor((time+(2*i))/4))),-0.5,0);
             M.scale(0.05,sizeOfObstacle,0.05);
             M.rotateX(Math.PI/2);
-            var m2 = M.value();
-            sphereHitsSphere([m2[12], m2[13], m2[14]], ballS, sizeOfObstacle, ballRadius);
+            var m5 = M.value();
+            sphereHitsSphere([m5[12], m5[13], m5[14]], ballS1, sizeOfObstacle, ballRadius1,1);
+            sphereHitsSphere([m5[12], m5[13], m5[14]], ballS2, sizeOfObstacle, ballRadius2,2);
+            sphereHitsSphere([m5[12], m5[13], m5[14]], ballS3, sizeOfObstacle, ballRadius3,3);
+            sphereHitsSphere([m5[12], m5[13], m5[14]], ballS4, sizeOfObstacle, ballRadius4,4);
             drawMesh(cylinderMesh, 'blue', false);
          M.restore();
       }
