@@ -178,7 +178,7 @@ let lerp = (a,b,t) => a + t * (b - a); // LINEAR INTERPOLATION
 // TIMING TABLE FOR THE ANIMATION SEQUENCE
 
 let timing = [
-   [0, 1],
+   [0, 0.5],
 ];
 
 // EASE CURVE TO ACCELERATE FROM REST AND THEN DECELERATE TO REST
@@ -203,7 +203,7 @@ let evalTiming = n => {
 let sliderToT = s => Math.max(0, 10 * (sw/2 + s));
 let tToSlider = t => Math.max(sr-sw, Math.min(sw-sr, t / 10 - sw/2));
 
-let animationTime = 0, animationRunning = false, prevTime = 0, maxTime = 3;
+let animationTime = 0, animationRunning = false, prevTime = 0, maxTime = 0.5;
 
 //----------- ANIMATE EACH FRAME
 
@@ -304,9 +304,7 @@ function animate(gl) {
    let b = .5 + widgetValue[1] / .34;
    let c = .5 + widgetValue[2] / .34;
 
-   let rate = .25 + a;
-   let stretch = .2 + .3 * b;
-   let divs = Math.floor(5 + c * 40);
+   let numberOfCylinders = 4;
 
    M.save();
       M.save();
@@ -315,14 +313,27 @@ function animate(gl) {
          drawMesh(cubeMesh, 'yellow', false);
       M.restore();
       M.save();
-         M.scale(0.2);
-         M.translate(0,2*Math.sin(Math.PI*T[0]),0);
-         drawMesh(sphereMesh, 'red', false);
+         M.scale(0.1);
+         M.translate(0,4*Math.sin(Math.PI*T[0])-4,0);
+         M.rotateZ(-4*time);
+         drawMesh(sphereMesh, 'red', true);
       M.restore();
       M.save();
-         M.translate(0,-1.2,0);
-         M.scale(1);
-         drawMesh(cubeMesh, 'blue', false);
+      for(let i=0;i<numberOfCylinders;i++) {
+           M.save();
+           M.translate(4*(0.5 - ((time+i)/4 - Math.floor((time+i)/4))),-0.5,0);
+           M.scale(0.05 + i/50);
+           M.rotateX(Math.PI/2);
+           drawMesh(cylinderMesh, 'blue', false);
+           M.restore();
+      }
+
+      M.restore();
+      M.save();
+         M.translate(0,-1.7,0);
+         M.scale(1.2);
+         M.rotateY(Math.PI/2);
+         drawMesh(cylinderMesh, 'blue', false);
       M.restore();
    M.restore();
 }
