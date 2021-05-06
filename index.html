@@ -6,7 +6,7 @@
 
 <body bgcolor=black text=white link=white alink=white vlink=white>
 <center>
-<canvas id='canvas1' width=1200 height=1200></canvas>
+<canvas id='canvas1' width=800 height=800></canvas>
 </center>
 </body>
 
@@ -154,6 +154,7 @@ materials['white'  ] = { ambient: [.2,.2,.2], diffuse: [1,1,1], specular: [.9,.9
 materials['yellow' ] = { ambient: [.2,.2,.0], diffuse: [1,1,0], specular: [.9,.9,.0,10] };
 materials['skin' ] = { ambient: [.1,.0859,0.0675], diffuse: [1,0.859,0.675], specular: [1,0.859,0.675] };
 materials['tongue' ] = { ambient: [.1,.0212,0.0608], diffuse: [1,0.212,0.608], specular: [1,0.212,0.608,0.675] };
+materials['water' ] = { ambient: [0.05137,0.08431,0.09333], diffuse: [0.5137,0.8431,0.9333], specular: [0.5137,0.8431,0.9333,100] };
 
 //----------- DEFINE THE HERMITE SPLINE CURVE DATA
 
@@ -267,6 +268,66 @@ function animate(gl) {
 
    setUniform('Matrix4fv', 'uCamera', false, matrix_perspective(3));
 
+   let implicitFunction = (x,y,z,args) => {
+      let a = blob( [0, 0, 0.25], 0.28, x,y,z );            // head
+
+      let b = blob( [0.24, 0.32, 0.25], 0.1, x,y,z );    // ear 1
+
+      let c = blob( [-0.24, 0.32, 0.25], 0.1, x,y,z );      // ear 2
+
+      let d = blob( [0, -0.1, 0.5], 0.1, x,y,z );    // cheek 1
+
+      let f = blob( [0, -0.3, 0.08], 0.15, x,y,z );   // neck
+
+      let g1 = blob([0, -0.45, -0.25], 0.3, x, y, z);   //body
+      let h1 = blob([0, -0.45, -0.75], 0.3, x, y, z);     // body
+
+      let m = blob( [0, -0.2, -0.85], 0.1, x,y,z );    // tail
+      let n = blob( [0, 0, -0.85], 0.1, x,y,z );   // tail
+      let m1 = blob( [0, 0.2, -0.85], 0.1, x,y,z );    // tail
+
+      return a*a*a*a + b*b*b*b + c*c*c*c + d*d*d*d + f*f*f*f
+      + g1*g1*g1*g1 + h1*h1*h1*h1
+       + m*m*m*m + n*n*n*n + m1*m1*m1*m1 - 0.5;
+   }
+
+   let implicitFunction2 = (x,y,z,args) => {
+      let a = blob( [0, 0, 0.45], 0.28, x,y,z );            // head
+
+      let b = blob( [0.24, 0.32, 0.45], 0.1, x,y,z );    // ear 1
+
+      let c = blob( [-0.24, 0.32, 0.45], 0.1, x,y,z );      // ear 2
+
+      let d = blob( [0, -0.3, 0.5], 0.1, x,y,z );    // cheek 1
+
+      let f = blob( [0, -0.4, 0.12], 0.15, x,y,z );   // neck
+
+      let g1 = blob([0, -0.45, -0.25], 0.3, x, y, z);   //body
+      let h1 = blob([0, -0.45, -0.75], 0.3, x, y, z);     // body
+
+      let m = blob( [0, -0.2, -0.85], 0.1, x,y,z );    // tail
+      let n = blob( [0, 0, -0.85], 0.1, x,y,z );   // tail
+      let m1 = blob( [0, 0.2, -0.85], 0.1, x,y,z );    // tail
+
+      let i1 = blob([0.15, -1, 0], 0.1, x, y, z);   // front leg 1
+      let j1 = blob([0.15, -0.8, 0], 0.1, x, y, z);     // front leg 2
+
+      let i2 = blob([-0.15, -1, 0], 0.1, x, y, z);   // front leg 1
+      let j2 = blob([-0.15, -0.8, 0], 0.1, x, y, z);     // front leg 2
+
+      let i3 = blob([0.15, -1, -0.75], 0.1, x, y, z);   // back leg 1
+      let j3 = blob([0.15, -0.8, -0.75], 0.1, x, y, z);     // back leg 2
+
+      let i4 = blob([-0.15, -1, -0.75], 0.1, x, y, z);   // back leg 1
+      let j4 = blob([-0.15, -0.8, -0.75], 0.1, x, y, z);     // back leg 2
+
+      return a*a*a*a + b*b*b*b + c*c*c*c + d*d*d*d + f*f*f*f
+      + g1*g1*g1*g1 + h1*h1*h1*h1
+       + i1*i1*i1*i1 + j1*j1*j1*j1 + i2*i2*i2*i2 + j2*j2*j2*j2
+       + i3*i3*i3*i3 + j3*j3*j3*j3 + i4*i4*i4*i4 + j4*j4*j4*j4
+       + m*m*m*m + n*n*n*n + m1*m1*m1*m1 - 0.5;
+   }
+
    // DRAW CONTROL WIDGETS
 
    for (let n = 0 ; n < widgetValue.length ; n++) {
@@ -319,16 +380,6 @@ function animate(gl) {
       }
    }
 
-   if(gameOver) {
-     M.save();
-        M.translate(0,0,0);
-        M.scale(0.03,0.1,0.05);
-        M.rotateX(Math.PI/2);
-        drawMesh(cylinderMesh, 'white', false);
-     M.restore();
-     return ;
-   }
-
    let a = .5 + widgetValue[0] / .34;
    let b = .5 + widgetValue[1] / .34;
    let c = .5 + widgetValue[2] / .34;
@@ -348,30 +399,58 @@ function animate(gl) {
    let stretch = .2 + .3 * b;
    let divs = Math.floor(5 + c * 40);
 
-   let implicitFunction = (x,y,z,args) => {
-      let a = blob( [0, 0, 0.25], 0.28, x,y,z );            // head
+   if(gameOver) {
+     M.save();
+        M.scale(0.7);
+        let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction2, divs,
+           [] );
+        drawMesh(implicitSurfaceMesh, 'skin', true);
 
-      let b = blob( [0.24, 0.32, 0.25], 0.1, x,y,z );    // ear 1
-      //let b1 = blob( [0.24, 0.32, 0.25], 0.08, x,y,z );  // ear 1
+        M.save();
+          M.translate(-0.12,0,0.68);
+          M.scale(0.06,0.07,0.05);
+          drawMesh(sphereMesh, 'black', false);
+        M.restore();
+        M.save();
+           M.translate(-0.12,-0.1,0.68);
+           M.scale(0.03,0.06,0.03);
+           drawMesh(sphereMesh, 'water', false);
+           M.translate(0,-3,0);
+           drawMesh(sphereMesh, 'water', false);
+        M.restore();
+        M.save();
+          M.translate(0.12,0,0.68);
+          M.scale(0.06,0.07,0.05);
+          drawMesh(sphereMesh, 'black', false);
+        M.restore();
+        M.save();
+           M.translate(0.12,-0.1,0.68);
+           M.scale(0.03,0.06,0.03);
+           drawMesh(sphereMesh, 'water', false);
+           M.translate(0,-3,0);
+           drawMesh(sphereMesh, 'water', false);
+        M.restore();
+        M.save();
+          M.translate(0,-0.3,0.69);
+          M.scale(0.08,0.05,0.05);
+          drawMesh(sphereMesh, 'brass', false);
+        M.restore();
 
-      let c = blob( [-0.24, 0.32, 0.25], 0.1, x,y,z );      // ear 2
+        M.save();
+          M.translate(0,-0.3,0.2);
+          M.scale(0.2);
+          M.rotateX(3*Math.PI/4);
+          drawMesh(torusMesh, 'red', false);
+        M.restore();
 
-      let d = blob( [0, -0.1, 0.5], 0.1, x,y,z );    // cheek 1
-      //let e = blob( [-0.2, -0.12, 0.4], 0.1, x,y,z );   // cheek 2
-
-      //let f = cube([0.25, 0.25, 0], 0.4, x, y, z);
-      let f = blob( [0, -0.3, 0.08], 0.15, x,y,z );   // neck
-
-      let g1 = blob([0, -0.45, -0.25], 0.3, x, y, z);   //body
-      let h1 = blob([0, -0.45, -0.75], 0.3, x, y, z);     // body
-
-      let m = blob( [0, -0.2, -0.85], 0.1, x,y,z );    // tail
-      let n = blob( [0, 0, -0.85], 0.1, x,y,z );   // tail
-      let m1 = blob( [0, 0.2, -0.85], 0.1, x,y,z );    // tail
-
-      return a*a*a*a + b*b*b*b + c*c*c*c + d*d*d*d + f*f*f*f
-      + g1*g1*g1*g1 + h1*h1*h1*h1
-       + m*m*m*m + n*n*n*n + m1*m1*m1*m1 - 0.5;
+        M.save();
+          M.translate(0,-0.3,0.55);
+          M.scale(0.07,0.16,0.1);
+          M.rotateX(3*Math.PI/4);
+          drawMesh(diskMesh, 'tongue', false);
+        M.restore();
+     M.restore();
+     return ;
    }
 
    M.save();
