@@ -503,7 +503,7 @@ function animate(gl) {
          // FRONT LEGS
          M.save();
                M.translate(-0.1,-0.7,0);
-               M.rotateX(Math.PI/2 + Math.cos(10*time)/2);
+               M.rotateX(Math.PI/2 + Math.sin(10*time)/2);
                M.save();
                   M.scale(0.1,0.1,0.2);
                   drawMesh(sphereMesh, 'white', false);
@@ -553,7 +553,7 @@ function animate(gl) {
          M.restore();
          M.save();
                M.translate(0.2,-0.7,-0.8);
-               M.rotateX(Math.PI/2 + Math.sin(10*time));
+               M.rotateX(Math.PI/2 + Math.cos(10*time));
                M.save();
                   M.scale(0.1,0.1,0.2);
                   drawMesh(sphereMesh, 'white', false);
