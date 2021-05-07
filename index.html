@@ -160,6 +160,7 @@ materials['ground' ] = { ambient: [0.04075,0.08,0.02504], diffuse: [0.4075,0.8,0
 materials['orange' ] = { ambient: [0.1,0.0647,0], diffuse: [1,0.647,0], specular: [1,0.647,0,20] };
 materials['orange2' ] = { ambient: [0.1,0.0392,0], diffuse: [1,0.392,0], specular: [1,0.392,0,20] };
 materials['cloud' ] = { ambient: [0.033,0.033,0.033], diffuse: [0.63,0.63,0.63], specular: [0.63,0.63,0.63,10] };
+materials['stone' ] = { ambient: [0.023,0.023,0.033], diffuse: [0.23,0.23,0.13], specular: [0.23,0.23,0.23,10] };
 
 //----------- DEFINE THE HERMITE SPLINE CURVE DATA
 
@@ -356,6 +357,24 @@ function animate(gl) {
 
       return a*a*a*a + b*b*b*b + c*c*c*c
       + d*d*d*d + e*e*e*e + f*f*f*f + g*g*g*g
+      - 0.5;
+   }
+
+   let implicitFunctionForRock = (x,y,z,args) => {
+      let a = blob( [0, 0, 0], 0.2, x,y,z );
+
+      let b = blob( [0.4, 0, 0], 0.15, x,y,z );
+      let c = blob( [-0.4, 0, 0], 0.15, x,y,z );
+
+      let d = blob( [0.3, 0.2, 0], 0.1, x,y,z );
+      let e = blob( [-0.3, 0.2, 0], 0.1, x,y,z );
+
+      let f = blob( [0, 0.3, 0], 0.15, x,y,z );
+
+      return a*a*a*a
+      + b*b*b*b + c*c*c*c
+      + d*d*d*d + e*e*e*e
+      + f*f*f*f
       - 0.5;
    }
 
@@ -903,11 +922,22 @@ function animate(gl) {
       // CLOUDS
       for(let i=0;i<3;i++) {
         M.save();
-               M.translate(3*(0.5 - ((time+7*i)/15 - Math.floor((time+7*i)/15))),i/2,-1);
+               M.translate(3*(0.5 - ((time+6*i)/15 - Math.floor((time+6*i)/15))),i/2,-1);
                M.scale(0.24);
                let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForCloud, divs,
                   [] );
                drawMesh(implicitSurfaceMesh, 'cloud', true);
+         M.restore();
+      }
+
+      // STONES
+      for(let i=0;i<3;i++) {
+        M.save();
+           M.translate(3.2*(0.5 - ((time+i)/4 - Math.floor((time+i)/4))),-0.6 + (i/30),0.5);
+           let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForRock, divs,
+           [] );
+           M.scale(0.2);
+           drawMesh(implicitSurfaceMesh, 'stone', true);
          M.restore();
       }
 
