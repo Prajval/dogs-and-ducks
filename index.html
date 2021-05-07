@@ -102,6 +102,8 @@ let vs = my_vertex_shader.innerHTML,
     fs = my_fragment_shader.innerHTML;
     fs = fs.substring(1, fs.length);
 
+let score = 0;
+
 document.body.innerHTML = [''
    ,'<center><font size=6 color=#b0b0b0>' + my_title.innerHTML + '</center>'
    ,'<TABLE cellspacing=0 cellpadding=0><TR>'
@@ -111,32 +113,14 @@ document.body.innerHTML = [''
    ,'<tr>'
    ,'<td valign=top><font size=2 color=red><div id=errorMarker>&nbsp;</div></font></td>'
    ,'<td valign=top>'
-   // ,'<textArea id=textArea spellcheck=false '
-   // ,'style="font:16px courier;outline-width:0;border-style:none;resize:none;overflow:scroll;"'
-   // ,'></textArea>'
    ,'</td><td valign=top>' + document.body.innerHTML + '</td>'
    ,'<td valign=top><font size=5>' + my_instructions.innerHTML + '</td>'
    ,'</tr></table>'
    ,'</TR></TABLE>'
    ].join('');
 
-//----------- SET UP THE EDITABLE TEXT AREA ON THE LEFT SIDE.
-
-// let text = fs.split('\n'), cols = 0;
-// for (let i = 0 ; i < text.length ; i++)
-//    cols = Math.max(cols, text[i].length);
-//
-// textArea.rows = text.length;
-// textArea.cols = cols;
-// textArea.value = fs;
-// textArea.style.backgroundColor = '#202020';
-// textArea.style.color = 'white';
-//
-// //----------- REPARSE THE SHADER PROGRAM AFTER EVERY KEYSTROKE.
-//
-// textArea.onkeyup = function() { canvas1.setShaders(vs, this.value); }
-
 let startTime = Date.now();
+let startTime2 = Date.now();
 
 let r3 = Math.sqrt(1/3);
 
@@ -185,11 +169,13 @@ let sphereHitsSphere = (S1, S2, r1, r2, caseNumber) => {
           + Math.pow(S1[2]-S2[2], 2);
    d = Math.sqrt(d);
 
-   if((d <= (r1 + r2)) == true)
-      console.log(caseNumber);
-
    if(!gameOver)
       gameOver = (d <= (r1 + r2));
+
+   if(gameOver) {
+     score = Math.floor((Date.now() - startTime2) / 1000);
+     console.log(score);
+   }
    return ;
 }
 
@@ -1037,7 +1023,15 @@ canvas1.onKeyRelease = k => isKeyPressed = false;
 
 // RECORD WHETHER MOUSE IS PRESSED
 let isMousePressed = false;
-canvas1.onPress   = (x,y) => {isMousePressed = true; animationRunning = true; gameOver = false;}
+canvas1.onPress   = (x,y) => {
+                                isMousePressed = true;
+                                animationRunning = true;
+                                if(gameOver) {
+                                  gameOver = false;
+                                  startTime2 = Date.now();
+                                  score = 0;
+                                }
+                             }
 canvas1.onRelease = (x,y) => {isMousePressed = false; same = false;}
 
 // START EVERYTHING
