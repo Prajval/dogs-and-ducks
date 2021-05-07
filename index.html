@@ -341,18 +341,6 @@ function animate(gl) {
      - 0.5;
    }
 
-
-   var ballS1 = [];
-   var ballRadius1 = 0.1;
-   var ballS2 = [];
-   var ballRadius2 = 0.1;
-   var ballS3 = [];
-   var ballRadius3 = 0.1;
-   var ballS4 = [];
-   var ballRadius4 = 0.1;
-
-   var numberOfObstacles = 2;
-
    let divs = 24;
 
    let timeColor = time - Math.floor(time);
@@ -703,6 +691,22 @@ function animate(gl) {
      return ;
    }
 
+
+   var ballS1 = [];
+   var ballRadius1 = 0.1;
+   var ballS2 = [];
+   var ballRadius2 = 0.1;
+   var ballS3 = [];
+   var ballRadius3 = 0.1;
+   var ballS4 = [];
+   var ballRadius4 = 0.1;
+   var ballHeadS = [];
+   var ballHeadRadius;
+
+   var numberOfObstacles = 2;
+
+
+   // GAME NOT OVER STARTS HERE
    M.save();
       M.save();
          M.translate(0,1,1);
@@ -718,6 +722,12 @@ function animate(gl) {
             [] );
          M.rotateX(Math.cos(10*time)/10);
          drawMesh(implicitSurfaceMesh, 'skin', true);
+
+        // Assign ballHeadS and ballHeadRadius
+         let m10 = M.value();
+         ballHeadS = [m10[12]+0.05, m10[13], m10[14]];
+         ballHeadRadius = 0.015;
+
          M.save();
            M.translate(-0.1,0.1,0.47);
            M.scale(0.05);
@@ -820,7 +830,8 @@ function animate(gl) {
 
      // OBSTACLES
       for(let i=0;i<numberOfObstacles;i++) {
-         M.save();
+
+        M.save();
                M.translate(3.2*(0.5 - ((time+(2*i))/4 - Math.floor((time+(2*i))/4))),-0.46,0);
                M.scale(0.15);
 
@@ -846,6 +857,14 @@ function animate(gl) {
                M.save();
                   M.translate(-0.2,0.35,0);
                   M.scale(0.1,0.04,0.04);
+
+                  var m7 = M.value();
+                  sizeOfObstacle = 0.015;
+                  sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 1);
+                  sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 2);
+                  sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 3);
+                  sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 4);
+
                   drawMesh(sphereMesh, 'orange2', false);
                M.restore();
 
@@ -876,13 +895,6 @@ let blob = (center, radius, x, y, z) => {
    y -= center[1];
    z -= center[2];
    return Math.max(0, 1 - .16 * (x*x + y*y + z*z) / (radius * radius));
-}
-
-
-let implicitFunction = (x,y,z,args) => {
-   let a = blob( [args[0], 0, 0], 0.28, x,y,z );
-
-   return a*a*a*a - 0.5;
 }
 
 // HELPER FUNCTIONS FOR ANIMATION
