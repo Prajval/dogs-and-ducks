@@ -161,6 +161,7 @@ materials['orange' ] = { ambient: [0.1,0.0647,0], diffuse: [1,0.647,0], specular
 materials['orange2' ] = { ambient: [0.1,0.0392,0], diffuse: [1,0.392,0], specular: [1,0.392,0,20] };
 materials['cloud' ] = { ambient: [0.033,0.033,0.033], diffuse: [0.63,0.63,0.63], specular: [0.63,0.63,0.63,10] };
 materials['stone' ] = { ambient: [0.023,0.023,0.033], diffuse: [0.23,0.23,0.13], specular: [0.23,0.23,0.23,10] };
+materials['darkgreen' ] = { ambient: [0,0.0278,0.0204], diffuse: [0.082,0.278,0.04], specular: [0.082,0.278,0.204,50] };
 
 //----------- DEFINE THE HERMITE SPLINE CURVE DATA
 
@@ -378,7 +379,35 @@ function animate(gl) {
       - 0.5;
    }
 
-   let divs = 24;
+   let implicitFunctionForGrass = (x,y,z,args) => {
+      let a = blob( [0, 0.1, 0], 0.1, x,y,z );
+
+      let b = blob( [0, 0.15, 0], 0.1, x,y,z );
+      let c = blob( [0, 0.3, 0], 0.06, x,y,z );
+      let d = blob( [0, 0.4, 0], 0.08, x,y,z );
+      let e = blob( [0, 0.5, 0], 0.06, x,y,z );
+
+      let b1 = blob( [0.2, 0.15, 0], 0.1, x,y,z );
+      let c1 = blob( [0.3, 0.3, 0], 0.08, x,y,z );
+      let d1 = blob( [0.4, 0.4, 0], 0.08, x,y,z );
+      let e1 = blob( [0.47, 0.5, 0], 0.06, x,y,z );
+
+      let b2 = blob( [-0.2, 0.15, 0], 0.1, x,y,z );
+      let c2 = blob( [-0.3, 0.3, 0], 0.08, x,y,z );
+      let d2 = blob( [-0.35, 0.4, 0], 0.08, x,y,z );
+      let e2 = blob( [-0.4, 0.5, 0], 0.06, x,y,z );
+
+      return a*a*a*a
+       + b*b*b*b + c*c*c*c
+       + d*d*d*d + e*e*e*e
+       + b1*b1*b1*b1 + c1*c1*c1*c1
+       + d1*d1*d1*d1 + e1*e1*e1*e1
+       + b2*b2*b2*b2 + c2*c2*c2*c2
+       + d2*d2*d2*d2 + e2*e2*e2*e2
+      - 0.5;
+   }
+
+   let divs = 16;
 
    let timeColor = time - Math.floor(time);
 
@@ -931,13 +960,23 @@ function animate(gl) {
       }
 
       // STONES
-      for(let i=0;i<3;i++) {
+      for(let i=0;i<8;i++) {
         M.save();
-           M.translate(3.2*(0.5 - ((time+i)/4 - Math.floor((time+i)/4))),-0.6 + (i/30),0.5);
-           let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForRock, divs,
-           [] );
+           M.translate(3.2*(0.5 - ((time+i/2)/4 - Math.floor((time+i/2)/4))),-0.6 + (i/80),0.5);
            M.scale(0.2);
-           drawMesh(implicitSurfaceMesh, 'stone', true);
+
+           var implicitSurfaceMesh2;
+           if(i%5 == 0) {
+             implicitSurfaceMesh2 = implicitSurfaceTriangleMesh(implicitFunctionForRock, divs,
+             [] );
+             drawMesh(implicitSurfaceMesh2, 'stone', true);
+           } else {
+             M.translate(0,0,0);
+             implicitSurfaceMesh2 = implicitSurfaceTriangleMesh(implicitFunctionForGrass, divs,
+             [] );
+             drawMesh(implicitSurfaceMesh2, 'darkgreen', true);
+           }
+
          M.restore();
       }
 
