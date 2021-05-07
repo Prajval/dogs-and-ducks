@@ -157,6 +157,8 @@ materials['tongue' ] = { ambient: [.1,.0212,0.0608], diffuse: [1,0.212,0.608], s
 materials['water' ] = { ambient: [0.05137,0.08431,0.09333], diffuse: [0.5137,0.8431,0.9333], specular: [0.5137,0.8431,0.9333,100] };
 materials['sky' ] = { ambient: [0,0.1,0.1], diffuse: [0,0.8,1], specular: [0,0.8,1,100] };
 materials['ground' ] = { ambient: [0.04075,0.08,0.02504], diffuse: [0.4075,0.8,0.2504], specular: [0.4075,0.8,0.2504,100] };
+materials['orange' ] = { ambient: [0.1,0.0647,0], diffuse: [1,0.647,0], specular: [1,0.647,0,20] };
+materials['orange2' ] = { ambient: [0.1,0.0392,0], diffuse: [1,0.392,0], specular: [1,0.392,0,20] };
 
 //----------- DEFINE THE HERMITE SPLINE CURVE DATA
 
@@ -331,12 +333,12 @@ function animate(gl) {
    }
 
    let implicitFunctionForDuck = (x,y,z,args) => {
-      let a = blob( [0, 0.4, 0.25], 0.2, x,y,z );
-      let b = blob( [0, 0, 0.25], 0.18, x,y,z);
-      let c = blob( [0.3, 0, 0.25], 0.18, x,y,z);
+     let a = blob( [0, 0.4, 0], 0.2, x,y,z );
+     let b = blob( [0, 0, 0], 0.18, x,y,z);
+     let c = blob( [0.3, 0, 0], 0.18, x,y,z);
 
-      return a*a*a*a + b*b*b*b + c*c*c*c
-      - 0.5;
+     return a*a*a*a + b*b*b*b + c*c*c*c
+     - 0.5;
    }
 
 
@@ -813,30 +815,51 @@ function animate(gl) {
                   drawMesh(sphereMesh, 'white', false);
                M.restore();
          M.restore();
+      M.restore();
 
 
      // OBSTACLES
-      M.restore();
       for(let i=0;i<numberOfObstacles;i++) {
          M.save();
+               M.translate(3.2*(0.5 - ((time+(2*i))/4 - Math.floor((time+(2*i))/4))),-0.46,0);
+               M.scale(0.15);
 
-            // Duck
-            // let implicitSurfaceMeshDuck = implicitSurfaceTriangleMesh(implicitFunctionForDuck, divs,
-            // [] );
-            // M.scale(0.2);
-            // drawMesh(implicitSurfaceMeshDuck, 'yellow', false);
+               var m6 = M.value();
+               sizeOfObstacle = 0.15 * 0.2;
+               sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS1, sizeOfObstacle, ballRadius1, 1);
+               sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS2, sizeOfObstacle, ballRadius2, 2);
+               sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS3, sizeOfObstacle, ballRadius3, 3);
+               sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS4, sizeOfObstacle, ballRadius4, 4);
 
+               let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForDuck, divs,
+                  [] );
+               drawMesh(implicitSurfaceMesh, 'orange', true);
 
-            var sizeOfObstacle = 0.05 + i/30;
-            M.translate(3.2*(0.5 - ((time+(2*i))/4 - Math.floor((time+(2*i))/4))),-0.5,0);
-            M.scale(0.05,sizeOfObstacle,0.05);
-            M.rotateX(Math.PI/2);
-            var m5 = M.value();
-            sphereHitsSphere([m5[12], m5[13], m5[14]], ballS1, sizeOfObstacle, ballRadius1,1);
-            sphereHitsSphere([m5[12], m5[13], m5[14]], ballS2, sizeOfObstacle, ballRadius2,2);
-            sphereHitsSphere([m5[12], m5[13], m5[14]], ballS3, sizeOfObstacle, ballRadius3,3);
-            sphereHitsSphere([m5[12], m5[13], m5[14]], ballS4, sizeOfObstacle, ballRadius4,4);
-            drawMesh(cylinderMesh, 'ground', false);
+               // Duck eyes
+               M.save();
+                  M.translate(-0.03,0.4,0.2);
+                  M.scale(0.04,0.04,0.04);
+                  drawMesh(sphereMesh, 'black', false);
+               M.restore();
+
+               // Duck beak
+               M.save();
+                  M.translate(-0.2,0.35,0);
+                  M.scale(0.1,0.04,0.04);
+                  drawMesh(sphereMesh, 'orange2', false);
+               M.restore();
+
+               // Duck legs
+               M.save();
+                  M.translate(0,-0.2,0);
+                  M.scale(0.04,0.08,0.04);
+                  drawMesh(sphereMesh, 'orange2', false);
+               M.restore();
+               M.save();
+                  M.translate(0.25,-0.2,0);
+                  M.scale(0.04,0.09,0.04);
+                  drawMesh(sphereMesh, 'orange2', false);
+               M.restore();
          M.restore();
       }
       M.save();
