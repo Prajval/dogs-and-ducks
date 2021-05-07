@@ -62,7 +62,7 @@ function gl_start(canvas, vertexShader, fragmentShader) {           // START WEB
    addEventListenersToCanvas(canvas);
 
    setTimeout(function() {
-      try { 
+      try {
          canvas.gl = canvas.getContext('experimental-webgl');              // Make sure WebGl is supported.
       } catch (e) { throw 'Sorry, your browser does not support WebGL.'; }
 
@@ -168,3 +168,15 @@ let drawMesh = (mesh, materialId, isTriangleMesh) => {
    gl.drawArrays(isTriangleMesh ? gl.TRIANGLES : gl.TRIANGLE_STRIP, 0, mesh.length / VERTEX_SIZE);
 }
 
+let drawMesh2 = (mesh, isTriangleMesh, ambient, diffuse, specular) => {
+   let m = M.value();
+   setUniform('Matrix4fv', 'uMatrix', false, m);
+   setUniform('Matrix4fv', 'uInvMatrix', false, matrix_inverse(m));
+
+   setUniform('3fv', 'uAmbient' , ambient);
+   setUniform('3fv', 'uDiffuse' , diffuse);
+   setUniform('4fv', 'uSpecular', specular);
+
+   gl.bufferData(gl.ARRAY_BUFFER, mesh, gl.STATIC_DRAW);
+   gl.drawArrays(isTriangleMesh ? gl.TRIANGLES : gl.TRIANGLE_STRIP, 0, mesh.length / VERTEX_SIZE);
+}

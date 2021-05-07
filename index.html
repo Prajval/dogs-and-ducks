@@ -328,61 +328,6 @@ function animate(gl) {
        + m*m*m*m + n*n*n*n + m1*m1*m1*m1 - 0.5;
    }
 
-   // DRAW CONTROL WIDGETS
-
-   for (let n = 0 ; n < widgetValue.length ; n++) {
-
-      let p = widgetPos[n];
-
-      switch (widgetType[n]) {
-      case 'slider':
-
-         // DRAW SLIDER FIXED PART
-
-         M.save();
-            M.translate(p[0],p[1],0);
-            M.rotateY(Math.PI/2);
-            M.scale(sr/2,sr/2,sw);
-            drawMesh(cylinderMesh, 'brass');
-         M.restore();
-
-         // DRAW SLIDER MOVING PART
-
-         M.save();
-            M.translate(p[0]+widgetValue[n],p[1],0);
-            M.scale(sr);
-            drawMesh(sphereMesh, selected == n ? 'white' : widgetColor[n]);
-         M.restore();
-
-	 break;
-
-      case 'button':
-      case 'toggle':
-
-         // DRAW BUTTON FIXED PART
-
-         M.save();
-            M.translate(p[0],p[1],0);
-            M.scale(sw,sr,sr/2);
-	    drawMesh(cubeMesh, 'brass');
-         M.restore();
-
-         // DRAW BUTTON CHANGING PART
-
-         M.save();
-            M.translate(p[0],p[1],0);
-            M.scale(sw-sr,sr/2,sr/2*1.01);
-	    drawMesh(cubeMesh, widgetType[n] == 'button' ? selected == n ? widgetColor[n] : 'black'
-	                                                 : selected == n ? 'white' : widgetValue[n] ? widgetColor[n] : 'black');
-         M.restore();
-
-	 break;
-      }
-   }
-
-   let a = .5 + widgetValue[0] / .34;
-   let b = .5 + widgetValue[1] / .34;
-   let c = .5 + widgetValue[2] / .34;
 
    var ballS1 = [];
    var ballRadius1 = 0.1;
@@ -395,12 +340,304 @@ function animate(gl) {
 
    var numberOfObstacles = 2;
 
-   let rate = .25 + a;
-   let stretch = .2 + .3 * b;
-   let divs = Math.floor(5 + c * 40);
+   let divs = 24;
+
+   let timeColor = time - Math.floor(time);
 
    if(gameOver) {
      M.save();
+
+        // GAME OVER
+        M.save();
+        M.save();
+           M.translate(-0.8, 0.8, 0);
+           M.scale(1.2);
+
+           // G
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.06,0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.05);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.06,-0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.05);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.translate(0.08,-0.05,0);
+              M.scale(0.02,0.02,0.03);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+
+           // A
+           M.save();
+           M.translate(0.17,0,0);
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.03);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,-0.01,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.03);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.1,0,0);
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.restore();
+
+           // M
+           M.save();
+           M.translate(0.35,0,0);
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.06,0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.04);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.translate(0.06,-0.01,0);
+              M.scale(0.02,0.03,0.03);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.12,0,0);
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.restore();
+
+
+           // E
+           M.save();
+           M.translate(0.55,0,0);
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.06);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,0,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.02,0.02,0.03);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,-0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.06);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.restore();
+
+           // O
+           M.save();
+              M.translate(0.85,0,0);
+              M.scale(0.06);
+              drawMesh2(torusMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+
+           // V
+           M.save();
+           M.translate(1,0,0);
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.rotateY(Math.PI/6);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.07,0,0);
+              M.rotateX(Math.PI/2);
+              M.rotateY(-Math.PI/6);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.restore();
+
+           // E
+           M.save();
+           M.translate(1.17,0,0);
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.06);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,0,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.02,0.02,0.03);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,-0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.06);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.restore();
+
+           // R
+           M.save();
+           M.translate(1.34,0,0);
+           M.save();
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.08);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,0.06,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.03,0.03,0.03);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,-0.01,0);
+              M.rotateY(Math.PI/2);
+              M.scale(0.025,0.025,0.025);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.08,0.03,0);
+              M.rotateX(Math.PI/2);
+              M.scale(0.03,0.03,0.03);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.save();
+              M.translate(0.05,-0.03,0);
+              M.rotateY(Math.PI/2);
+              M.rotateX(Math.PI/5);
+              M.scale(0.025,0.025,0.06);
+              drawMesh2(cylinderMesh, false,
+               [timeColor/10,timeColor/10,timeColor/10],
+                [timeColor,timeColor,timeColor],
+                 [timeColor,timeColor,timeColor,10]);
+           M.restore();
+           M.restore();
+
+
+        M.restore();
+
         M.scale(0.7);
         let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction2, divs,
            [] );
@@ -465,9 +702,7 @@ function animate(gl) {
         M.rotateY(Math.PI/2);
         M.translate(0,0.5,0.3);
          let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction, divs,
-            [stretch * Math.sin(3*rate),
-       stretch * Math.sin(4*rate),
-       stretch * Math.sin(5*rate)/2] );
+            [] );
          M.rotateX(Math.cos(10*time)/10);
          drawMesh(implicitSurfaceMesh, 'skin', true);
          M.save();
@@ -611,54 +846,6 @@ let implicitFunction = (x,y,z,args) => {
 let bounce = t => Math.sin(Math.PI * t);
 let wiggle = t => Math.sin(6 * Math.PI * t);
 
-// DESCRIPTIONS OF ALL THE CONTROL WIDGETS
-
-let widgetType  = ['slider', 'slider', 'slider'];
-let widgetColor = ['red', 'green', 'blue'];
-let widgetPos = [[-.8,.96],[-.8,.88],[-.8,.80]];
-let widgetValue = [0,0,0];
-let sr = 0.03;
-let sw = 0.2;
-let widgetChanged = -1;
-
-let cx = 0, cy = 0, selected = -1;
-
-// SET THE VALUE OF A WIDGET
-
-let setValue = state => {
-   if (selected >= 0)
-      switch (widgetType[selected]) {
-      case 'slider':
-         widgetValue[selected] = Math.max(sr-sw, Math.min(sw-sr, cx-widgetPos[selected][0]));
-	 break;
-      case 'toggle':
-         widgetValue[selected] = 1 - widgetValue[selected];
-	 break;
-      case 'button':
-         widgetValue[selected] = state;
-	 break;
-      }
-   widgetChanged = selected;
-}
-
-// FIND OUT WHICH WIDGET IS AT THE CURSOR
-
-let doHitTesting = () => {
-   let V = [ 0, 0, fl ],
-       W = normalize([ cx, cy, -fl ]);
-   selected = -1;
-   for (let n = 0 ; n < widgetValue.length ; n++) {
-      let p = widgetPos[n];
-      for (let x = -sw ; x <= sw ; x += .7*sr)
-         if (rayHitsSphere(V,W, [p[0]+x,p[1],0,sr])) {
-            selected = n;
-            if (widgetType[selected] == 'slider')
-               setValue(1);
-            return;
-         }
-   }
-}
-
 // RESPOND TO MOUSE EVENTS ON THE CANVAS
 
 canvas1.onPress = (x,y) => {
@@ -670,8 +857,6 @@ canvas1.onPress = (x,y) => {
 canvas1.onDrag = (x,y) => {
    cx = x;
    cy = y;
-   if (selected >= 0 && widgetType[selected] != 'toggle')
-      setValue(1);
 }
 
 canvas1.onRelease = (x,y) => {
