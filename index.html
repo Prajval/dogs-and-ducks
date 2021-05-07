@@ -330,6 +330,15 @@ function animate(gl) {
        + m*m*m*m + n*n*n*n + m1*m1*m1*m1 - 0.5;
    }
 
+   let implicitFunctionForDuck = (x,y,z,args) => {
+      let a = blob( [0, 0.4, 0.25], 0.2, x,y,z );
+      let b = blob( [0, 0, 0.25], 0.18, x,y,z);
+      let c = blob( [0.3, 0, 0.25], 0.18, x,y,z);
+
+      return a*a*a*a + b*b*b*b + c*c*c*c
+      - 0.5;
+   }
+
 
    var ballS1 = [];
    var ballRadius1 = 0.1;
@@ -805,9 +814,19 @@ function animate(gl) {
                M.restore();
          M.restore();
 
+
+     // OBSTACLES
       M.restore();
       for(let i=0;i<numberOfObstacles;i++) {
          M.save();
+
+            // Duck
+            // let implicitSurfaceMeshDuck = implicitSurfaceTriangleMesh(implicitFunctionForDuck, divs,
+            // [] );
+            // M.scale(0.2);
+            // drawMesh(implicitSurfaceMeshDuck, 'yellow', false);
+
+
             var sizeOfObstacle = 0.05 + i/30;
             M.translate(3.2*(0.5 - ((time+(2*i))/4 - Math.floor((time+(2*i))/4))),-0.5,0);
             M.scale(0.05,sizeOfObstacle,0.05);
