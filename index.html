@@ -403,6 +403,8 @@ function animate(gl) {
 
    let timeColor = time - Math.floor(time);
 
+   score = Math.floor((Date.now() - startTime2) / 1000);
+
    if(gameOver) {
      M.save();
 
@@ -749,6 +751,10 @@ function animate(gl) {
      return ;
    }
 
+   document.getElementById("score").innerHTML = "<b>" + "Dogs and Ducks" + "</b><br>"
+   + "Help the dog escape the ducks<br>"
+   + "to score as many points as possible<br>";
+   document.getElementById("score").innerHTML+= "Score : " + score;
 
    var ballS1 = [];
    var ballRadius1 = 0.1;
