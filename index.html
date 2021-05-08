@@ -177,7 +177,7 @@ let sphereHitsSphere = (S1, S2, r1, r2, caseNumber) => {
        score = Math.floor((Date.now() - startTime2) / 1000);
        console.log(score);
        document.getElementById("score").innerHTML = "Score : " + score + "<br>";
-       document.getElementById("score").innerHTML+= "Click anywhere to continue" + "<br>";
+       document.getElementById("score").innerHTML+= "Click on the screen to continue" + "<br>";
        isScoreDisplayed = true;
      }
    }
@@ -949,7 +949,7 @@ function animate(gl) {
                   M.scale(0.1,0.04,0.04);
 
                   var m7 = M.value();
-                  sizeOfObstacle = 0.015;
+                  sizeOfObstacle = obstacleSizeArr[i]/10;
                   sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 1);
                   sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 2);
                   sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 3);
