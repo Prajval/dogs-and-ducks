@@ -371,33 +371,33 @@ function animate(gl) {
       - 0.5;
    }
 
-   let implicitFunctionForGrass = (x,y,z,args) => {
-      let a = blob( [0, 0.1, 0], 0.1, x,y,z );
-
-      let b = blob( [0, 0.15, 0], 0.1, x,y,z );
-      let c = blob( [0, 0.3, 0], 0.06, x,y,z );
-      let d = blob( [0, 0.4, 0], 0.08, x,y,z );
-      let e = blob( [0, 0.5, 0], 0.06, x,y,z );
-
-      let b1 = blob( [0.2, 0.15, 0], 0.1, x,y,z );
-      let c1 = blob( [0.3, 0.3, 0], 0.08, x,y,z );
-      let d1 = blob( [0.4, 0.4, 0], 0.08, x,y,z );
-      let e1 = blob( [0.47, 0.5, 0], 0.06, x,y,z );
-
-      let b2 = blob( [-0.2, 0.15, 0], 0.1, x,y,z );
-      let c2 = blob( [-0.3, 0.3, 0], 0.08, x,y,z );
-      let d2 = blob( [-0.35, 0.4, 0], 0.08, x,y,z );
-      let e2 = blob( [-0.4, 0.5, 0], 0.06, x,y,z );
-
-      return a*a*a*a
-       + b*b*b*b + c*c*c*c
-       + d*d*d*d + e*e*e*e
-       + b1*b1*b1*b1 + c1*c1*c1*c1
-       + d1*d1*d1*d1 + e1*e1*e1*e1
-       + b2*b2*b2*b2 + c2*c2*c2*c2
-       + d2*d2*d2*d2 + e2*e2*e2*e2
-      - 0.5;
-   }
+   // let implicitFunctionForGrass = (x,y,z,args) => {
+   //    let a = blob( [0, 0.1, 0], 0.1, x,y,z );
+   //
+   //    let b = blob( [0, 0.15, 0], 0.1, x,y,z );
+   //    let c = blob( [0, 0.3, 0], 0.06, x,y,z );
+   //    let d = blob( [0, 0.4, 0], 0.08, x,y,z );
+   //    let e = blob( [0, 0.5, 0], 0.06, x,y,z );
+   //
+   //    let b1 = blob( [0.2, 0.15, 0], 0.1, x,y,z );
+   //    let c1 = blob( [0.3, 0.3, 0], 0.08, x,y,z );
+   //    let d1 = blob( [0.4, 0.4, 0], 0.08, x,y,z );
+   //    let e1 = blob( [0.47, 0.5, 0], 0.06, x,y,z );
+   //
+   //    let b2 = blob( [-0.2, 0.15, 0], 0.1, x,y,z );
+   //    let c2 = blob( [-0.3, 0.3, 0], 0.08, x,y,z );
+   //    let d2 = blob( [-0.35, 0.4, 0], 0.08, x,y,z );
+   //    let e2 = blob( [-0.4, 0.5, 0], 0.06, x,y,z );
+   //
+   //    return a*a*a*a
+   //     + b*b*b*b + c*c*c*c
+   //     + d*d*d*d + e*e*e*e
+   //     + b1*b1*b1*b1 + c1*c1*c1*c1
+   //     + d1*d1*d1*d1 + e1*e1*e1*e1
+   //     + b2*b2*b2*b2 + c2*c2*c2*c2
+   //     + d2*d2*d2*d2 + e2*e2*e2*e2
+   //    - 0.5;
+   // }
 
    let divs = 16;
 
@@ -973,10 +973,26 @@ function animate(gl) {
              [] );
              drawMesh(implicitSurfaceMesh2, 'stone', true);
            } else {
-             M.translate(0,0,0);
-             implicitSurfaceMesh2 = implicitSurfaceTriangleMesh(implicitFunctionForGrass, divs,
-             [] );
-             drawMesh(implicitSurfaceMesh2, 'darkgreen', true);
+
+              M.save();
+              M.scale(0.5);
+              M.save();
+                 M.scale(0.4,1.7,0.6);
+                 drawMesh(sphereMesh, "darkgreen", false);
+              M.restore();
+              M.save();
+                 M.rotateZ(Math.PI/5);
+                 M.translate(-0.8,0,0);
+                 M.scale(0.4,1.7,0.6);
+                 drawMesh(sphereMesh, "darkgreen", false);
+              M.restore();
+              M.save();
+                 M.rotateZ(-Math.PI/5);
+                 M.translate(0.8,0,0);
+                 M.scale(0.4,1.7,0.6);
+                 drawMesh(sphereMesh, "darkgreen", false);
+              M.restore();
+              M.restore();
            }
 
          M.restore();
