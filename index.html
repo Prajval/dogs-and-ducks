@@ -176,7 +176,8 @@ let sphereHitsSphere = (S1, S2, r1, r2, caseNumber) => {
      if(!isScoreDisplayed) {
        score = Math.floor((Date.now() - startTime2) / 1000);
        console.log(score);
-       document.getElementById("score").innerHTML+= "Score : " + score + "<br>";
+       document.getElementById("score").innerHTML = "Score : " + score + "<br>";
+       document.getElementById("score").innerHTML+= "Click anywhere to continue" + "<br>";
        isScoreDisplayed = true;
      }
    }
@@ -1034,6 +1035,9 @@ canvas1.onPress   = (x,y) => {
                                   gameOver = false;
                                   startTime2 = Date.now();
                                   score = 0;
+                                  document.getElementById("score").innerHTML = "<b>" + "Dogs and Ducks" + "</b><br>"
+                                  + "Help the dog escape the ducks<br>"
+                                  + "to score as many points as possible<br>";
                                 }
                              }
 canvas1.onRelease = (x,y) => {isMousePressed = false; same = false; isScoreDisplayed = false;}
