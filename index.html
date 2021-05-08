@@ -225,6 +225,8 @@ let tToSlider = t => Math.max(sr-sw, Math.min(sw-sr, t / 10 - sw/2));
 
 let animationTime = 0, animationRunning = false, prevTime = 0, maxTime = 0.5;
 
+let numberOfObstacles = 4;
+
 //----------- ANIMATE EACH FRAME
 
 function animate(gl) {
@@ -767,8 +769,6 @@ function animate(gl) {
    var ballRadius4 = 0.1;
    var ballHeadS = [];
    var ballHeadRadius;
-
-   var numberOfObstacles = 4;
 
 
    // GAME NOT OVER STARTS HERE
