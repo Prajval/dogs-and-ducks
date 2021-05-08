@@ -87,7 +87,7 @@ FINAL PROJECT
 
 <script id='my_instructions' type='text/html'><font color=#b0b0b0>
 <b>Dogs and Ducks</b><br>
-Help the dogs escape the ducks<br>
+Help the dog escape the ducks<br>
 to score as many points as possible<br>
 </script>
 
@@ -114,7 +114,7 @@ document.body.innerHTML = [''
    ,'<td valign=top><font size=2 color=red><div id=errorMarker>&nbsp;</div></font></td>'
    ,'<td valign=top>'
    ,'</td><td valign=top>' + document.body.innerHTML + '</td>'
-   ,'<td valign=top><font size=5>' + my_instructions.innerHTML + '</td>'
+   ,'<td valign=top><font size=5 id=score>' + my_instructions.innerHTML + '</td>'
    ,'</tr></table>'
    ,'</TR></TABLE>'
    ].join('');
@@ -160,7 +160,7 @@ let fl = 3;
 
 
 // GAME MODE - 0 - GAME,  1 - GAME OVER
-let gameOver = false;
+let gameOver = false, isScoreDisplayed = false;
 
 // HIT TESTING OF 2 SPHERES
 let sphereHitsSphere = (S1, S2, r1, r2, caseNumber) => {
@@ -173,8 +173,12 @@ let sphereHitsSphere = (S1, S2, r1, r2, caseNumber) => {
       gameOver = (d <= (r1 + r2));
 
    if(gameOver) {
-     score = Math.floor((Date.now() - startTime2) / 1000);
-     console.log(score);
+     if(!isScoreDisplayed) {
+       score = Math.floor((Date.now() - startTime2) / 1000);
+       console.log(score);
+       document.getElementById("score").innerHTML+= "Score : " + score + "<br>";
+       isScoreDisplayed = true;
+     }
    }
    return ;
 }
@@ -1032,7 +1036,7 @@ canvas1.onPress   = (x,y) => {
                                   score = 0;
                                 }
                              }
-canvas1.onRelease = (x,y) => {isMousePressed = false; same = false;}
+canvas1.onRelease = (x,y) => {isMousePressed = false; same = false; isScoreDisplayed = false;}
 
 // START EVERYTHING
 
