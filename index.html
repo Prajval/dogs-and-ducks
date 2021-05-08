@@ -931,7 +931,8 @@ function animate(gl) {
                sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS3, sizeOfObstacle, ballRadius3, 3);
                sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS4, sizeOfObstacle, ballRadius4, 4);
 
-               let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForDuck, divs,
+               let divsForDuck = 12;
+               let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForDuck, divsForDuck,
                   [] );
                drawMesh(implicitSurfaceMesh, 'orange', true);
 
