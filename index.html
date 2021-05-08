@@ -949,7 +949,7 @@ function animate(gl) {
                   M.scale(0.1,0.04,0.04);
 
                   var m7 = M.value();
-                  sizeOfObstacle = obstacleSizeArr[i]/10;
+                  sizeOfObstacle = obstacleSizeArr[i]*obstacleSizeArr[i];
                   sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 1);
                   sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 2);
                   sphereHitsSphere([m7[12], m7[13], m7[14]], ballHeadS, sizeOfObstacle, ballHeadRadius, 3);
