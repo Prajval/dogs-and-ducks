@@ -226,6 +226,21 @@ let tToSlider = t => Math.max(sr-sw, Math.min(sw-sr, t / 10 - sw/2));
 let animationTime = 0, animationRunning = false, prevTime = 0, maxTime = 0.5;
 
 let numberOfObstacles = 4;
+let obstacleSizeArr = [];
+let obstacleDist = [];
+
+function computeObstacleSizeAndSpeed() {
+  for(let i=0;i<numberOfObstacles;i++) {
+    obstacleSizeArr[i] = Math.random(0,1) * 0.05 + 0.1;
+    obstacleDist[i] = (Math.random(0,1) * 0.5) + i;
+  }
+}
+
+function computeObstacleSizeAndSpeedFor(i) {
+    obstacleSizeArr[i] = Math.random(0,1) * 0.05 + 0.1;
+    obstacleDist[i] = (Math.random(0,1) * 0.5) + i;
+}
+computeObstacleSizeAndSpeed();
 
 //----------- ANIMATE EACH FRAME
 
@@ -900,16 +915,21 @@ function animate(gl) {
         var obstacleRate = (Math.max(3, 5 - 0.3 * dogSpeed));
 
         M.save();
-               M.translate(obstacleRate*(0.5 - ((time+(i))/4 - Math.floor((time+(i))/4))),-0.46,0);
-               M.scale(0.15);
+               console.log(obstacleDist[i]);
+               M.translate(obstacleRate*(0.5 - ((time+(obstacleDist[i]))/4 - Math.floor((time+(obstacleDist[i]))/4))),-0.46,0);
+               M.scale(obstacleSizeArr[i]);
 
                var m6 = M.value();
-               sizeOfObstacle = 0.15 * 0.2;
+               sizeOfObstacle = obstacleSizeArr[i] * 0.2;
 
-               sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS1, sizeOfObstacle, ballRadius1, 1);
-               sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS2, sizeOfObstacle, ballRadius2, 2);
-               sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS3, sizeOfObstacle, ballRadius3, 3);
-               sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS4, sizeOfObstacle, ballRadius4, 4);
+               if(m6[12] > 1.2) {
+                 computeObstacleSizeAndSpeedFor(i);
+               }
+
+               sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS1, sizeOfObstacle, ballRadius1, 1);
+               sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS2, sizeOfObstacle, ballRadius2, 2);
+               sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS3, sizeOfObstacle, ballRadius3, 3);
+               sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS4, sizeOfObstacle, ballRadius4, 4);
 
                let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForDuck, divs,
                   [] );
@@ -1059,6 +1079,7 @@ canvas1.onPress   = (x,y) => {
                                 isMousePressed = true;
                                 animationRunning = true;
                                 if(gameOver) {
+                                  computeObstacleSizeAndSpeed();
                                   gameOver = false;
                                   startTime2 = Date.now();
                                   score = 0;
