@@ -953,7 +953,7 @@ function animate(gl) {
       // CLOUDS
       for(let i=0;i<3;i++) {
         M.save();
-               M.translate(3*(0.5 - ((time+6*i)/15 - Math.floor((time+6*i)/15))),i/2,-1);
+               M.translate(3.2*(0.5 - ((time+6*i)/15 - Math.floor((time+6*i)/15))),i/2+0.2,-1.5);
                M.scale(0.24);
                let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForCloud, divs,
                   [] );
