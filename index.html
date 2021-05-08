@@ -768,7 +768,7 @@ function animate(gl) {
    var ballHeadS = [];
    var ballHeadRadius;
 
-   var numberOfObstacles = 2;
+   var numberOfObstacles = 4;
 
 
    // GAME NOT OVER STARTS HERE
@@ -900,11 +900,12 @@ function animate(gl) {
         var obstacleRate = (Math.max(3, 5 - 0.3 * dogSpeed));
 
         M.save();
-               M.translate(obstacleRate*(0.5 - ((time+(2*i))/4 - Math.floor((time+(2*i))/4))),-0.46,0);
+               M.translate(obstacleRate*(0.5 - ((time+(i))/4 - Math.floor((time+(i))/4))),-0.46,0);
                M.scale(0.15);
 
                var m6 = M.value();
                sizeOfObstacle = 0.15 * 0.2;
+
                sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS1, sizeOfObstacle, ballRadius1, 1);
                sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS2, sizeOfObstacle, ballRadius2, 2);
                sphereHitsSphere([m6[12]+0.05, m6[13], m6[14]], ballS3, sizeOfObstacle, ballRadius3, 3);
