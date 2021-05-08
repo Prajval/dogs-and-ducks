@@ -404,6 +404,7 @@ function animate(gl) {
    let timeColor = time - Math.floor(time);
 
    score = Math.floor((Date.now() - startTime2) / 1000);
+   dogSpeed = score;
 
    if(gameOver) {
      M.save();
@@ -778,7 +779,7 @@ function animate(gl) {
          drawMesh(cubeMesh, 'sky', false);
       M.restore();
       M.save();
-        M.translate(0,(Math.max(0.4, 0.6 - 0.003 * time/1000))*Math.sin(Math.PI*T[0])-0.45,0);
+        M.translate(0,(Math.max(0.3, 0.6 - 0.03 * dogSpeed))*Math.sin(Math.PI*T[0])-0.45,0);
         M.scale(0.1);
         M.rotateY(Math.PI/2);
         M.translate(0,0.5,0.3);
@@ -896,7 +897,7 @@ function animate(gl) {
       for(let i=0;i<numberOfObstacles;i++) {
 
         // Obsctacles rate
-        var obstacleRate = (Math.max(3.2, 5 - 0.03 * time/1000));
+        var obstacleRate = (Math.max(3, 5 - 0.3 * dogSpeed));
 
         M.save();
                M.translate(obstacleRate*(0.5 - ((time+(2*i))/4 - Math.floor((time+(2*i))/4))),-0.46,0);
