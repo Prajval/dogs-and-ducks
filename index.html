@@ -718,7 +718,7 @@ function animate(gl) {
         M.restore();
 
         M.scale(0.7);
-        let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction2, divs,
+        let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunction2, 32,
            [] );
         drawMesh(implicitSurfaceMesh, 'skin', true);
 
