@@ -785,6 +785,9 @@ function animate(gl) {
    var ballHeadS = [];
    var ballHeadRadius;
 
+   var ballS5 = [];
+   var ballRadius5 = 0.1;
+
 
    // GAME NOT OVER STARTS HERE
    M.save();
@@ -807,6 +810,10 @@ function animate(gl) {
          let m10 = M.value();
          ballHeadS = [m10[12]+0.05, m10[13], m10[14]];
          ballHeadRadius = 0.015;
+
+         let m11 = M.value();
+         ballS5 = [m10[12], m10[13]-0.05, m10[14]];
+         ballRadius5 = 0.2/5;
 
          M.save();
            M.translate(-0.1,0.1,0.47);
@@ -930,6 +937,8 @@ function animate(gl) {
                sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS2, sizeOfObstacle, ballRadius2, 2);
                sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS3, sizeOfObstacle, ballRadius3, 3);
                sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS4, sizeOfObstacle, ballRadius4, 4);
+
+               sphereHitsSphere([m6[12]+(0.33 * obstacleSizeArr[i]), m6[13], m6[14]], ballS5, sizeOfObstacle, ballRadius5, 5);
 
                let divsForDuck = 12;
                let implicitSurfaceMesh = implicitSurfaceTriangleMesh(implicitFunctionForDuck, divsForDuck,
