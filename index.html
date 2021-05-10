@@ -36,6 +36,16 @@
    }
 </script>
 
+<audio id="audio" src="./dogbark.mp3"></audio>
+ <script>
+      function play() {
+        var audio = document.getElementById("audio");
+        audio.play();
+      }
+</script>
+
+</script>
+
 
 <!!-------- FRAGMENT SHADER -------->
 
@@ -1087,6 +1097,7 @@ canvas1.onKeyRelease = k => isKeyPressed = false;
 // RECORD WHETHER MOUSE IS PRESSED
 let isMousePressed = false;
 canvas1.onPress   = (x,y) => {
+                                play();
                                 isMousePressed = true;
                                 animationRunning = true;
                                 if(gameOver) {
